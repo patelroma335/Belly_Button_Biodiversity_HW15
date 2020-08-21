@@ -46,7 +46,7 @@
            var data = [trace1];
   
            // create layout variable to set plots layout
-           var layout = {
+           var layout1 = {
               title: "The Top10 OTUs",
               yaxis:{
                  tickmode:"linear",
@@ -60,16 +60,35 @@
         };
   
         // create the bar plot
-        Plotly.newPlot("bar", data, layout);
+        Plotly.newPlot("bar", data, layout1);
   
+        
+        var trace2 = {
+          x: otu_ids,
+          y: sample_values,
+          mode: "markers",
+          marker: {
+              size: sample_values,
+              color: otu_ids
+          },
+          text: otu_labels
 
-      
+      };
 
+      // set the layout for the bubble plot
+      var layout2 = {
+          xaxis:{title: "OTU ID"},
+          height: 600,
+          width: 1000
+      };
 
+      var data1 = [trace2];
 
+      Plotly.newPlot("bubble", data1, layout2); 
 
-        });
-        }
+    });
 
+  }
+  
+  getPlots(940);
 
-        getPlots(940);
