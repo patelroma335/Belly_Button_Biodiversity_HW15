@@ -1,63 +1,75 @@
 
-    
-       function buildCharts(sample) {
-        // Use D3 fetch to read the JSON file
-        d3.json("data/samples.json").then((data)=> {
-            console.log(data);
+        //console.log("hello World!");
             
-          
-          var samples = data.samples.filter(s => s.id.toString() === id)[0];
-        
-          console.log(samples);
+         
+         function getPlots(id) {
 
-         // Top10 otu_labels for hovertext 
-          var OTU_labels = samples.otu_labels.slice(0, 10);
+             // fetch json file 
+              d3.json("samples.json").then ((sampledata) =>{
+                  console.log(sampledata)
 
-          // Top 10 Sample_Values
-          var samplevalues = samples.sample_values.slice(0, 10);
-    
-          // Top 10 otu ids
-          var top10_OTUs = (samples.otu_ids.slice(0, 10));
-          
-          var OTU_id = top10_OTUs.map(d => "OTU" + d);
-          
-        
-          var trace = {
-            x: samplevalues,
-            y: OTU_id,
-            text: OTU_labels,
-            marker: {
-              color: 'rgba(222,45,38,0.8)'},
-            type:"bar",
-            orientation: "h",
+                  var samples = sampledata.samples;
+
+                  var resultArray = samples.filter(sampleObj => sampleObj.id == id);
+                  console.log(resultArray);
+
+                  var result = resultArray[0];
+
+                  var otu_ids = result.otu_ids;
+
+                  var otu_labels = result.otu_labels;
+
+                  var sample_values = result.sample_values;
+                  
+                SampleValues = sample_values.slice(0, 10).reverse();  
+                console.log(SampleValues);
+                console.log(otu_ids.slice(0, 10).reverse());
+                console.log(otu_labels.slice(0, 10).reverse());
+
+                var OTU_id = otu_ids.map(d => "OTU " + d);
+                console.log(`OTU_IDS: ${otu_ids}`);
+
+                var labels =  sampledata.samples[0].otu_labels.slice(0,10);
+                console.log(`OTU_labels: ${otu_labels}`);
+
+                var trace1 = {
+                  x: SampleValues,
+                  y: OTU_id,
+                  text: labels,
+                  marker: {
+                    color: 'rgb(23, 190, 207)'},
+                  type:"bar",
+                  orientation: "h",
+              };
+
+            // create data variable
+           var data = [trace1];
+  
+           // create layout variable to set plots layout
+           var layout = {
+              title: "The Top10 OTUs",
+              yaxis:{
+                 tickmode:"linear",
+           },
+            margin: {
+                l: 100,
+                r: 100,
+                t: 100,
+                b: 30
+            }
         };
   
-        
-        var data = [trace];
- 
-
-                var layout = {
-                    title: 'The Top10 OTUs',
-                    font:{
-                      family: 'Raleway, sans-serif'
-                    },
-                    showlegend: false,
-                    xaxis: {
-                      tickangle: -45
-                    },
-                    yaxis: {
-                      zeroline: false,
-                      gridwidth: 2
-                    },
-                    bargap :0.05
-                  };
-                  
+        // create the bar plot
         Plotly.newPlot("bar", data, layout);
-
-
-    });
-}    
-
-
-
   
+
+      
+
+
+
+
+        });
+        }
+
+
+        getPlots(940);
