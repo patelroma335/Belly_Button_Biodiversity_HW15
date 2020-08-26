@@ -1,10 +1,32 @@
+ 
+      //console.log("Hello World!");
 
-        //console.log("hello World!");
+    function getInfo(id) {
+          // Fetch the JSON data and console log it              
+          d3.json("samples.json").then((data)=> {
+                  var metadata = data.metadata;
+                    console.log(metadata)
+          
+                  // filter meta data info 
+                  var result = metadata.filter(meta => meta.id.toString() === id)[0];
+          
+                  // use d3 to select demographic panel 
+                  var Info = d3.select("#sample-metadata");
+                  
+                  Info.html("");
+          
+                  // append the info to the panel
+                  Object.entries(result).forEach((key) => {   
+                          Info.append("h5").text(key[0].toUpperCase() + ": " + key[1] + "\n");    
+                  });
+              });
+          }
             
-         
+            
+            
          function getPlots(id) {
 
-             // fetch json file 
+            // Fetch the JSON data and console log it
               d3.json("samples.json").then ((sampledata) =>{
                   console.log(sampledata)
 
@@ -13,13 +35,13 @@
                   var resultArray = samples.filter(sampleObj => sampleObj.id == id);
                   console.log(resultArray);
 
-                  var result = resultArray[0];
+                  var data = resultArray[0];
 
-                  var otu_ids = result.otu_ids;
+                  var otu_ids = data.otu_ids;
 
-                  var otu_labels = result.otu_labels;
+                  var otu_labels = data.otu_labels;
 
-                  var sample_values = result.sample_values;
+                  var sample_values = data.sample_values;
                   
                 SampleValues = sample_values.slice(0, 10).reverse();  
                 console.log(SampleValues);
@@ -90,5 +112,35 @@
 
   }
   
-  getPlots(940);
+  getPlots();
 
+
+  function optionChanged(id) {
+    getPlot(id);
+    getInfo(id);
+  }
+
+  function init() {
+    // create DropDownList 
+    var DropDownList = d3.select("#selDataset");
+  
+    // Use the list of sample names to populate the select options
+    d3.json("samples.json").then((data) => {
+      var sampleNames = data.names;
+  
+      sampleNames.forEach((sample) => {
+        DropDownList
+          .append("option").text(sample).property("value", sample);
+      });
+  
+    
+    getPlots(data.names[0]);
+    getInfo(data.names[0]);
+  });
+  
+}
+ 
+  init();
+
+
+  
